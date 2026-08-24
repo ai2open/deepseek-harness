@@ -1,10 +1,11 @@
 /** Browser API carrier: HTTP upstream plus one WebSocket per downstream event stream. */
 
 import type { ApiProxy, HostFrame, MuxFrame, RpcRequest, ServerRequest } from './api.ts'
-import { AbstractApiClient } from './api.ts'
+import { AbstractApiClient, RpcId } from './api.ts'
 import { hostFrameSchema, muxFrameSchema } from '@deepseek-ai/dsh-host-apiproxy/api/events.schema'
 import { serverRequestSchema } from '@deepseek-ai/dsh-host-apiproxy/api/rpc.schema'
 import { HOST_EVENTS_PATH, MUX_EVENTS_PATH } from '../api-path.ts'
+import { randomUuid } from './random-uuid.ts'
 
 type SocketItem<F> = { kind: 'frame'; envelope: RpcRequest<F> } | { kind: 'end' }
 type Parser<F> = { parse(value: unknown): F }
@@ -13,6 +14,11 @@ type Parser<F> = { parse(value: unknown): F }
 export class WebApiClient extends AbstractApiClient {
   protected doFetch(input: URL, init?: RequestInit): Promise<Response> {
     return globalThis.fetch(input, init)
+  }
+
+  /** Browsers expose `crypto.randomUUID` only in secure contexts; LAN HTTP origins need the base override. */
+  protected override mintRpcId(): RpcId {
+    return RpcId(randomUuid())
   }
 
   protected override openMux(
