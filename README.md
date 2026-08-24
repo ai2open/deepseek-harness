@@ -22,6 +22,8 @@ npx @deepseek-ai/dsh web
 
 The command starts the Web UI at `http://127.0.0.1:3080` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).
 
+To serve browsers beyond loopback — a LAN or NAT-mapped address — pass `--trusted-host <host[:port]>` once per non-loopback authority browsers use: the `/api` trust fence refuses any request whose Host is neither loopback, a bind-derived LAN literal, nor a declared authority. Configuration-plane methods (settings, credentials, native directory dialogs) stay loopback-only regardless.
+
 ### Run from source
 
 To run from a repository checkout:

@@ -24,6 +24,8 @@ npx @deepseek-ai/dsh web
 
 该命令默认会在 `http://127.0.0.1:3080` 启动 Web UI，本机启动时还会用默认浏览器打开页面。通过 SSH 启动时只打印宿主机 URL，因为本地转发地址由 SSH 客户端或编辑器持有。传入 `--no-open` 可仅运行服务器而不打开浏览器。详见 [Web UI 指南](docs/user/guide/index.zh.md)。
 
+面向回环之外的浏览器提供服务（LAN 或 NAT 映射地址）时，为每个浏览器使用的非回环 authority 传一次 `--trusted-host <host[:port]>`：`/api` 信任栅栏会拒绝 Host 既非回环、也非绑定推导的 LAN 字面量、又未声明的请求。无论是否声明，配置面方法（settings、credentials、原生目录对话框）始终仅限回环。
+
 <a id="run-from-source"></a>
 
 ### 从源码运行
